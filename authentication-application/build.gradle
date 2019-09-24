@@ -1,0 +1,12 @@
+
+license { header = file('src/main/resources/META-INF/LICENSE-HEADER.txt') }
+
+license {
+    excludes(["**/*.txt", "**/*keep*.*", "**/*.gradle*", "**/*.*ignore", "**/*.properties"])
+
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    ext.name = 'lingocoder'
+    ext.email = 'plugins@lingocoder.com'
+
+    skipExistingHeaders = true
+}

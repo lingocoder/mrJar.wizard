@@ -1,0 +1,5 @@
+rootProject.name = 'mister.jar'
+
+include 'authentication-models'
+include 'authentication-application'
+include 'authentication-client'

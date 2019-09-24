@@ -1,0 +1,114 @@
+plugins {
+    id 'com.lingocoder.mrjar' version '0.0.12'
+    id 'java-library'
+    id 'com.github.hierynomus.license-base' version '0.15.0'
+}
+
+subprojects {
+    apply plugin: 'com.lingocoder.mrjar'
+    apply plugin: 'java-library'
+    apply plugin: 'com.github.hierynomus.license-base'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testImplementation 'junit:junit:4.12'
+        testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.23.4'
+    }
+
+    license { header = file('src/main/resources/META-INF/LICENSE-HEADER.txt') }
+
+    license {
+        excludes(["**/*.txt", "**/*keep*.*", "**/*.gradle*", "**/*.*ignore", "**/*.properties"])
+
+        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+        ext.name = 'lingocoder'
+        ext.email = 'plugins@lingocoder.com'
+
+        skipExistingHeaders = true
+    }
+}
+
+project(':authentication-client') {
+    apply plugin: 'com.lingocoder.mrjar'
+    apply plugin: 'application'
+
+    dependencies {
+        implementation project(':authentication-models')
+
+        implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9'
+        implementation(group: 'com.google.guava', name: 'guava', version: '23.5-jre') {
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+
+        api group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.9'
+    }
+
+    mrjar{ 
+        main = 'com.alexkudlick.authentication.client.AuthenticationClientApplication'
+        args = ['--create', 'mister.jar', 'testPassword']
+/*        args = ['--login','mister.jar', 'testPassword']*/
+/*        args = ['--check', '1e0bdd68-b591-4c9a-9755-cb326b04ad3d']*/
+
+    }
+}
+
+project(':authentication-application'){ 
+
+    apply plugin: 'com.lingocoder.mrjar'
+    apply plugin: 'application'
+
+    dependencies {
+        implementation project(':authentication-models')
+        implementation group: 'org.jadira.usertype', name: 'usertype.core', version: '7.0.0.CR1'
+        implementation(group: 'io.dropwizard', name: 'dropwizard-core', version: '1.2.9') {
+          exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+
+        implementation(group: 'io.dropwizard', name: 'dropwizard-hibernate', version: '1.2.9') {
+          exclude group: 'com.google.code.findbugs', module: 'jsr305'
+          exclude group: 'org.jboss.spec.javax.transaction', module: 'jboss-transaction-api_1.2_spec'
+        }
+        implementation group: 'javax.transaction', name: 'javax.transaction-api', version: '1.3'
+
+        implementation(group: 'io.dropwizard', name: 'dropwizard-migrations', version: '1.2.9') {
+          exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+
+        testImplementation(group: 'io.dropwizard', name: 'dropwizard-testing', version: '1.2.9') {
+          exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+        testRuntimeOnly group: 'com.h2database', name: 'h2', version: '1.4.197'
+
+        // crypto
+        implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.1.3.RELEASE'
+        runtimeOnly group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.60'
+        //end crypto
+
+        implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+
+        runtimeOnly group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    }
+		
+    mrjar{
+        main = 'com.alexkudlick.authentication.application.AuthenticationApplication'
+        args = ['server', 'authentication_application.yml']
+/*        args = ['db', 'migrate', 'authentication_application.yml']*/
+/*        args = ['db', 'status', 'authentication_application.yml']*/
+    }		
+}
+
+project(':authentication-models'){ 
+
+    dependencies {
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9'
+        implementation group: 'org.hibernate', name: 'hibernate-validator', version: '5.4.2.Final'
+
+        implementation(group: 'com.google.guava', name: 'guava', version: '23.5-jre') {
+          exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+    }		
+}

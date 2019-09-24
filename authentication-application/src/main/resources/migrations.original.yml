@@ -1,0 +1,72 @@
+#
+# A Gradle plugin that supports compiling, testing, assembling and maintaining Modular Multi-Release JAR Files.
+#
+# Copyright (C) 2019 lingocoder <plugins@lingocoder.com>
+#
+# This work is licensed under the Creative Commons Attribution-NoDerivatives 4.0
+# International (CC BY-ND 4.0) License.
+#
+# This work is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)
+# License for more details.
+#
+# You should have received a copy of the Creative Commons
+# Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0) License
+# along with this program. To view a copy of this license,
+# visit https://creativecommons.org/licenses/by-nd/4.0/.
+#
+
+databaseChangeLog:
+  - changeSet:
+      id: 1547851554156-1
+      author: alex (generated)
+      modifySql:
+        dbms: mysql
+        append:
+          applyToRollback: false
+          value: ENGINE=INNODB CHARSET=UTF8 COLLATE utf8_unicode_ci
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: next_val
+                  type: BIGINT(19)
+            tableName: hibernate_sequence
+  - changeSet:
+      id: 1547851554156-2
+      author: alex (generated)
+      modifySql:
+        dbms: mysql
+        append:
+          applyToRollback: false
+          value: ENGINE=INNODB CHARSET=UTF8 COLLATE utf8_unicode_ci
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                      primaryKey: true
+                  name: id
+                  type: BIGINT(19)
+              - column:
+                  constraints:
+                      nullable: false
+                  name: username
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                      nullable: false
+                  name: encrypted_password
+                  type: VARCHAR(1024)
+            tableName: users
+  - changeSet:
+      id: 1547851554156-3
+      author: alex (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: username
+            constraintName: username_unique_constraint
+            tableName: users
