@@ -4,7 +4,7 @@ Build A JPMS Modular RESTful Authentication Application with Jersey, Dropwizard 
 
 ## Building Modular Java Applications with the ***mrJar*** Gradle Plugin
 
-This project demonstrates the ease with which you can build and run a fairly complex module-based application with the help of [*the **mrJar** plugin*](http://bit.ly/mrJar.com). It was ported from [*an already existing project*](http://bit.ly/akudRepo) that uses a different Java module plugin.
+This project demonstrates the ease with which you can build and run a relatively complex module-based application with the help of [*the **mrJar** plugin*](http://bit.ly/mrJar.com). It was ported from [*an already existing project*](http://bit.ly/akudRepo) that uses a different Java module plugin.
 
 ### Prerequisites
 
@@ -32,7 +32,7 @@ The plugin that was used in that blog's original code has been replaced by ***mr
 
 ### MySQL database configuration
 
-You will need a MySQL database. And you will need to configure Dropwizard to use that database. Like the original, this project uses an *`authentication_application.yml`* file to configure Dropwizard. Included in that file is a *`database`* section with a *`url: ${DATABASE_JDBC_URL}`* line. You are, therefore, required to set an environment variable named *`DATABASE_JDBC_URL`* with a value that is the *`URL`* of your MySQL database. For example my Windows machine's name is *`lingocoder`*. And the MySQL database that I created for this demo is named *`mrjar`*; it runs on MySQL's default port. So *`set DATABASE_JDBC_URL=jdbc://mysql/lingocoder/mrjar`* worked for me.
+You will need a MySQL database. And you will need to configure Dropwizard to use that database. Like the original, this project uses an *`authentication_application.yml`* file to configure Dropwizard. Included in that file is a *`database`* section with a *`url: ${DATABASE_JDBC_URL}`* line. You are, therefore, required to set an environment variable named *`DATABASE_JDBC_URL`* with a value that is the *`URL`* of your MySQL database. For example my Windows machine's name is *`lingocoder`*. And the MySQL database that I created for this demo is named *`mrjar`*; it runs on MySQL's default port. So *`set DATABASE_JDBC_URL=jdbc:mysql://lingocoder/mrjar`* worked for me.
 
 This project contains another *`yaml`* file named *`migrations.yml`*. Dropwizard uses that file to, among other things, initialize your MySQL database. I have a very old MySQL version 3.23.36 that I've had on my machine for a coon's age. I haven't used it in years. But it works fine. And I'm frankly too lazy to upgrade it. So although the *`migrations.yml`* file in this repo has been customized to be usable in older versions of MySQL, it should work fine on newer versions too. Just in case, I've also included *`migrations.original.yml`* alongside it as a fallback.
 
@@ -54,7 +54,7 @@ The following refactoring has been implemented to simplify the *`build.gradle`* 
             args = ['--create', 'mister.jar', , 'testPassword']
         }
     
-5. Add a *`mrjar{ }`* block to the *authentication-appliction* section of the root project's composite *`build.gradle`*:
+5. Add a *`mrjar{ }`* block to the *authentication-application* section of the root project's composite *`build.gradle`*:
     
         mrjar{ 
             main = 'com.alexkudlick.authentication.application.AuthenticationApplication'
@@ -109,7 +109,7 @@ Then you're good to run:
 
 The *`REST`* resources this project focuses on are *Tokens* and *Users*. So before you can do anything with the application, there needs to be a *User* table in the database. Before we run the command to create that table, you have to first set a *`DATABASE_JDBC_URL`*. For example on *nix you could do:
 
-    export DATABASE_JDBC_URL=jdbc://mysql/lingocoder/mrjar
+    export DATABASE_JDBC_URL=jdbc:mysql://lingocoder/mrjar
 
 Now, using the *authentication-application* module assembled earlier, together with the *`db migrate...`* args configured in the *`mrjar{ }`* block of its build script...
     
@@ -130,7 +130,7 @@ Now, using the *authentication-application* module assembled earlier, together w
     liquibase: migrations.yml: migrations.yml::1547851554156-2::alex (generated): Table users created
     ...
 
-Once you have a that *`User`* table, you can then run the *`authentication-client`* module to create a *`User`* using the *`--create`* properties you configured in the *`mrjar{ }`* block of the *`authentication-client`*  build script above. Make sure your build script looks like what I described above:
+Once you have a *`User`* table, you are almost ready to run the *`authentication-client`* module to create a *`User`* using the *`--create`* properties you configured in the *`mrjar{ }`* block of the *`authentication-client`*  build script above. First make sure your build script looks like what I described above:
 
     
     mrjar{ 
@@ -139,7 +139,7 @@ Once you have a that *`User`* table, you can then run the *`authentication-clien
     }
     
 
- Also, remember to set the *`DATABASE_JDBC_URL`* environment variable.  Then, from the root directory, run this command to create a user:
+Also, you need an *`AUTHENTICATION_URL`* environment variable set to *`http://localhost:8080`*.  Then, from the root directory, run this command to create a user:
 
     gradlew authentication-client:run
 
@@ -210,6 +210,6 @@ Try out the *`db status`* command:
     ...
     [org.gradle.process.internal.DefaultExecHandle] Changing state to: SUCCEEDED
    
-This demonstration showed you how ***mrJar*** makes it easy to organize, build and run an application architected with JPMS modules. If this page does not go into sufficient technology detail for you, the you might find [*the original blog*](http://bit.ly/akudBlog) of some value.
+This demonstration showed you how ***mrJar*** makes it easy to organize, build and run an application architected with JPMS modules. If this page does not go into sufficient technology detail for you, then you might find [*the original blog*](http://bit.ly/akudBlog) of some value.
 
 Please get in touch with any questions.
